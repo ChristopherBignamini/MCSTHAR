@@ -1,0 +1,134 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <!-- Atomic types -->
+    
+    <xs:complexType name="ImportanceSamplingFunctionParameters">
+        <xs:sequence>
+            <xs:element name="electricChargeFugacity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Electric charge fugacity value (>0).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="baryonicChargeFugacity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Baryonic charge fugacity value (>0).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="strangeChargeFugacity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Strange charge fugacity value (>0).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="charmChargeFugacity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Charm charge fugacity value (>0).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="bottomChargeFugacity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Bottom charge fugacity value (>0).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="temperature" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Temperature value (>0) (GeV).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PartitionFunctionGridElement">
+        <xs:sequence>
+            <xs:element name="partitionFunctionGridElementIndex" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        Index of the current partition function element within (microcanonical parameter) global grid.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="partitionFunctionValue" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Partition function value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="partitionFunctionErrorValue" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Partition function error value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="numberChannelSamplings" type="xs:unsignedLong">
+                <xs:annotation>
+                    <xs:documentation>
+                        Number of channel samplings.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="importanceSamplingFunctionParameters" type="ImportanceSamplingFunctionParameters" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Importance sampling function configuration parameters.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- List types -->
+    
+    <xs:complexType name="PartitionFunctionDataList">
+		<xs:sequence>
+			<xs:element name="partitionFunctionData" type="PartitionFunctionGridElement" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Partition function data element.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="length" type="xs:unsignedInt" use="required">
+			<xs:annotation>
+				<xs:documentation>Number of partition function data elements.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+    
+    <!-- Global structure -->
+    
+    <xs:element name="PartitionFunctionDataFile">
+	   	<xs:complexType>
+            <xs:sequence>
+                <xs:element name="massValue" type="xs:double">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Mass value (Gev).
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="partitionFunctionDataList" type="PartitionFunctionDataList">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Partition function data list.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+	</xs:element>
+
+</xs:schema>

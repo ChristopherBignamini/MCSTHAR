@@ -1,0 +1,70 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Base type include -->
+
+    <xs:include schemaLocation="PartitionFunctionArchiveBaseTypes.xsd"/>
+
+    <!-- Atomic types -->
+    
+    <xs:complexType name="MassGridDataElement">
+        <xs:sequence>
+            <xs:element name="massValue" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Mass value (GeV).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dataFileName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Data file name (relative path).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- List types -->
+    
+    <xs:complexType name="MassGridDataElementList">
+		<xs:sequence>
+			<xs:element name="massGridDataElement" type="MassGridDataElement" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Mass grid data element.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="length" type="xs:unsignedInt" use="required">
+			<xs:annotation>
+				<xs:documentation>Number of mass grid data elements.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+    
+    <!-- Global structure -->
+    
+    <xs:element name="PartitionFunctionDataSummaryFile">
+	   	<xs:complexType>
+            <xs:sequence>
+                <xs:element name="chargeConfiguration" type="ChargeConfiguration">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Charge configuration.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="massGridDataElementList" type="MassGridDataElementList">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Mass grid data element list.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+	</xs:element>
+
+</xs:schema>

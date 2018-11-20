@@ -1,0 +1,72 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Base type include -->
+
+    <xs:include schemaLocation="PartitionFunctionArchiveBaseTypes.xsd"/>
+    
+    <!-- Atomic types -->
+    
+    <xs:complexType name="SingleChargeConfigurationArchive">
+        <xs:sequence>
+            <xs:element name="chargeConfiguration" type="ChargeConfiguration">
+                <xs:annotation>
+                    <xs:documentation>
+                        Charge configuration.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="folderName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Single charge configuration partition function archive folder name (relative path).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- List types -->
+    
+    <xs:complexType name="SingleChargeConfigurationArchiveList">
+		<xs:sequence>
+			<xs:element name="singleChargeConfigurationArchive" type="SingleChargeConfigurationArchive" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Single charge configuration partition function archive.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="length" type="xs:unsignedInt" use="required">
+			<xs:annotation>
+				<xs:documentation>
+                    Number of single charge configuration partition function archives.
+                </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>    
+    
+    <!-- Global structure -->
+    
+    <xs:element name="PartitionFunctionArchiveFile">
+	   	<xs:complexType>
+            <xs:sequence>
+                <xs:element name="microcanonicalParameterGridStructure" type="MicrocanonicalParameterGridStructure">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Microcanonical parameter grid structure.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="singleChargeConfigurationArchiveList" type="SingleChargeConfigurationArchiveList">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Single charge configuration partition function archive list.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+	</xs:element>
+
+</xs:schema>

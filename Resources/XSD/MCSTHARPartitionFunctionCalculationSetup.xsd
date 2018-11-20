@@ -1,0 +1,105 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <!-- Base type include -->
+    
+    <xs:include schemaLocation="PartitionFunctionArchiveBaseTypes.xsd"/>
+    
+    <!-- Atomic types -->
+    
+    <xs:complexType name="IntegrationParameters">
+		<xs:sequence>
+			<xs:element name="maxChannelSamplingNumber" type="xs:unsignedLong">
+				<xs:annotation>
+					<xs:documentation>
+                        Maximum number of channel samplings performed for partition function calculation.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="integrationErrorThreshold" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>
+                        Stability threshold for partition function calculation.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+    
+    
+    <!-- List types -->
+    
+    <xs:complexType name="MassValueList">
+		<xs:sequence>
+			<xs:element name="massValue" type="xs:double" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Mass value (GeV).
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="length" type="xs:unsignedInt" use="required">
+			<xs:annotation>
+				<xs:documentation>Number of mass values.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+    
+    
+    <xs:element name="MCSTHARPartitionFunctionCalculationSetup">
+	   	<xs:complexType>
+            <xs:sequence>
+                <xs:element name="hadronDataFileName" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Full path of the hadron data file.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="chargeConfiguration" type="ChargeConfiguration">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Charge configuration.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="microcanonicalParameterGridStructure" type="MicrocanonicalParameterGridStructure">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Microcanonical parameter grid structure.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="massValueList" type="MassValueList">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Mass value list.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="integrationParameters" type="IntegrationParameters">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Partition function integration parameters.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="randomNumberGeneratorSeed" type="xs:unsignedInt" minOccurs ="0" maxOccurs ="1">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Random number generator seed (non negative integer, 7 digits).
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="outputFolder" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Partition function calculation output files storage folder.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+	</xs:element>
+
+</xs:schema>

@@ -1,0 +1,92 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    
+    <!-- Atomic types -->
+
+    <xs:complexType name="ChargeConfiguration">
+        <xs:sequence>
+            <xs:element name="electricCharge" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Electric charge.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="baryonicCharge" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Barionic charge.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="strangeCharge" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Strange charge.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="charmCharge" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Charm charge.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="bottomCharge" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Bottom charge.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MicrocanonicalParameterGridStructure">
+        <xs:sequence>
+            <xs:element name="minEnergyDensity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Minimum energy density value (GeV/fm^3).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="maxEnergyDensity" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Maximum energy density value (GeV/fm^3).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="numberOfEnergyDensityValues" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        Number of energy density values.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="minStrangenessSuppressionParameter" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Minimum strangeness suppression parameter value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="maxStrangenessSuppressionParameter" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Maximum strangeness suppression parameter value.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="numberOfStrangenessSuppressionParameterValues" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        Number of strangeness suppression parameter values.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

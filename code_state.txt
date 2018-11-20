@@ -1,0 +1,441 @@
+
+MCSTHAR++
+
+Version alpha
+
+previous version --> MCSTHAR++_13_05_09 Only to be used for code comparison
+
+NOTES:
+1) Qual'Ë la stranezza dei Kl e Ks?? In quale insieme metterle? HepPDT fa 1 e -1
+   e direi che Ë identico a mettere 1 e 1 e poi campionare con la funzione d'onda.
+   In hw++ metto 1 e -1.
+2) Non mi torna il limite analitico 
+    per |p1-p2|->0... 
+
+TO DO:
+1) Il men˘ ha dei disallineamenti...
+2) Controllare che il conteggio degli eventi sia corretto anche quando hw ne rigetta,
+   in particolare verificare anche quando rigetta hwdhadchr, che essendo stata modificata
+   potrebbe dare comportamenti anomali.
+3) Quali sono le dimensioni di numeratore e denominatori nei contributi 
+     di stat quant??? Ci vuole la conversione anche lÏ!!
+4) Hw aggiorna il peso in hwepro e basta, la media che calcola non c'entra
+      nulla con me
+5) Provare ad inserire tutti i termini dell'errore
+6) Provare a vedere la storia della temperatura
+7) Vedere se nel reclustering ci sono problemi con i vertici e poi costruirli 
+     in modo sensato
+8) Finire reclustering e split
+9) Controllare in tutti i costruttori che ci siano le inizializzazioni 
+      delle variabili "semplci" tipo ncl in clustering
+10) Il decadimento a 1 corpo non c'Ë ancora
+11) Controllare come funziona la bw
+12) Inserire una funzione di errore come hwwarn di hw, vedere
+    com'Ë in hw++
+13) Togliere il gruppo risonanze che non serve
+14) Trattare in qualche modo l'errore sul peso degli eventi
+     ed inserirlo nell'errore totale sulla sezione d'urto
+18) Per ottimizzare Ë meglio costruire i gruppi una volta per tutte
+      e calcolare le medie evento per evento 
+20) Verificare che il conteggio di pesi ed eventi sia corretto e decidere
+     come calcolare le medie. In particolare vedere anche cosa fa la routine
+     hwdhadchr quando il decadimento non Ë possibile!
+21) Trovare e usare le particelle di herwig e anche i limiti di campionamento
+    della massa, magari copiando quelli di Pythia
+22) Aggiornare il codice in modo da leggere il set giusto di particelle,
+    come viene fatto in MicroPartition su lxplus
+    (FATTO e TESTATO (vs MCSTHAR_alphaHepMC) 07/11/09)
+    Mancano alcune particelle contenute in herwig che
+    in pythia non ci sono:
+    (30443,+-651,+-611,+-621,+-631,+-6332,+-641,663,+-6222,+-6122,
+    +-6112,+-6232,+-6132,110551,120553,100555,200553,300553,337,10335).
+    Inoltre, non ci sono differenze di massa al di sopra del 25
+    percento. Ci sono alcune differenze di spin che vengono stampate
+    per il momento a terminale. Infine, la particella 30221 di pythia
+    sembra coincidere con la 10221 di Herwig e HepPDT quindi le cambio
+    il pid.
+23) Aggiornare e verificare la routine per il reclustering, correggendo 
+    l'errore che c'è nell'inserimento dei nuovi cluster in hepevt (FATTO e TESTATO 23/10/09)
+24) Effettuare il calcolo con JADE nel modo corretto
+    (FATTO e TESTATO 27/11/09, rimosso JADE, al suo posto uso il prodotto
+    scalare, cosa che sembra fare anche Gabriellini) Inoltre modificato hadronizer,
+    in modo da ritornare una flag di controllo per uccidere l'evento nel caso in cui i 
+    limiti di massa nel reclustering vengano superati.
+    Modificato e testato il 15/12/09 dopo aver inserito un check sul limite superiore di massa,
+    con flag di rigetto dell'evento, e analogo sulle cariche dei cluster
+25) Verificare che il menù funzioni correttamente, mi sembra che non venga 
+    modificato il seme (magari è una cazzata)
+26) Modificare il codice in modo che legga il file esterno di funzioni di
+    partizione e interpoli tra i punti dati (FATTO 23/10/09 da TESTARE QUANDO SARANNO PRONTI I
+    FILE ESTERNI DI DATI!)
+    Testato almeno in generale il 16/12/09, duplicando i file esistenti per avere quelli assenti.
+27) Preparare la conversione al formato hepmc, rimuovendo cfortran che non serve 
+    a un cazzo.(VEDERE LA VERSIONE *_alphaHepMC)
+28) Fare un controllo finale su conservazione di cariche e 4-impulso
+29) Controllare il makefile e sistemarlo (sembra o ma fa schifo) e capire bene
+    quali opzioni di compilazione usare e come fare ricompilare anche quando si cambiano gli 
+    header file.
+30) Capire cosa fare della chiamata a hwudat e delle definizioni di nmxres ect...
+31) Togliere cfortran e modificare il codice come per la versione con
+    hepmc! (FATTO E TESTATO vs versione con cfortran 10/11/09, l'unica differenza, con o senza
+    MCSTHAR e con o senza cons della cariche Ë nell'approx nel print della massa di pi0.
+    Per il resto Ë ok, ma ho notato che se nella struct hwpram dichiaro le variabili
+    come sono nella common in herwig ci sono dei problemi! E' corretta la definizione 
+    che viene data nel wrapper di hepmc, che per le altre common non seguo perchË
+    sembra che non ci siano comunque casini...) Resta da vedere se Ë tutto ok con 
+    hwprop, visto che anche i vettori fortran li partono da zero. Inoltre sarebbe bello
+    capire perchË nella versione con hepmc nn riesco ad usare libmcsthar.a...
+32) Modificato Z_interpolator in modo da poter leggere la griglia non regolare in 
+    massa. L'unica modifica necessaria sembra essere a nr che viene aggiornato 
+    nel corso della letture dei file esterni. Necessariofare il check quando i
+    file esterni saranno pronti. A quel punto modificare anche hepmc.
+    (FATTO 15/11/09, da testare)
+33) Bisogna inventare un modo per gestire i cluster con massa oltre i limiti calcolati
+    e dare una valutazione dell'errore nel caso della griglia non equispaziata
+34) Modificato observables e l'aggiornamento della common per il peso degli eventi:
+    adesso viene modificato il peso interno di herwig. Resta da fare, eventualmente,
+    il calcolo dell'errore nella media delle osservabili.
+    (FATTO 16/12/09 da testare)
+35) Aggiunta nelle common hadronizerpp la variabile ICODE2 che Ë uguale a ICODE, per
+    tenere conti correttamente degli eventi uccisi da herwig. Nel fare questo ho modificato
+    hwwarn in modo da estrarre questa informazione, sarebbe meglio tenere la versione 
+    originale.
+    (FATTO 16/12/09 da modificare)
+36) Almeno momentaneamente il warning proveniente da hwdhad
+    (modificato) sembra risolto assegnando alle particelle le masse
+    date da herwig.
+    (FATTO 16/12/09 da modificare per poter fare il sampling corretto
+    con la bw)
+37) Aggiunto il modulo TOPDRAWER per l'analisi, e quindi il file esterno
+    topdrawer.f, modificando anche il wrapper per le nuove chiamate alle 
+    routine fortran, il main e il makefile.
+    (FATTO 17/12/09 e da testare)
+38) Modificato Z_interpolator in modo che legga i file con la nuova struttura (griglia in rho e gammas
+    completamente interna). Modificata anche la funzione di interpolazione in modo che si 
+    comporti correttamente anche al limite. Inoltre Ë stata aggiunta una variabile di 
+    check nella classe Z_interpolator in modo da sapere sempre cosa Ë andato male se
+    l'interpolazione non Ë riuscita. La variabile di controllo viene poi letta in function.h,
+    che a sua volta Ë stato modificato in modo opportuno.
+    (FATTO 10/01/10 e da testare, soprattutto la funzione di interpolazione).
+39) Modificato Her_to_Had in modo da gestire una nuova variabile rho, quella di sampling. Viene
+    stampata a terminale ma non si puÚ modificare da men˘. Bisogna trovare il modo per verificare
+    che in effetti sia stato modificato tutto in modo coerente, nel calcolo del peso e nel sampling
+    degli eventi. Inoltre Ë stata rimossa la chiamata a microcan che non serviva pi˘ a nulla
+    e comunque faceva un calcolo non aggiornato.
+    (FATTO 10/01/10 e da testare per il sampling e la normalizzazione con la rhosampl)
+40) In clu_to_hadro aggiunta flag di controllo che fa riferimento all'interpolazione ed altri step
+    necessari all'adronizzazione del singolo cluster. Modificato inoltre il calcolo del peso e il sampling
+    dello stato finale in modo da usare la nuova rhosampl.
+    (FATTO 10/01/10, da testare assolutamente il calcolo del peso e la coerenza del tutto!)
+41) Modificato clustering in modo da rigettare l'evento solo se c'Ë un cluster con mc<2mpi0
+    (FATTO 10/01/10 e testato, ma cosa succede se c'Ë un cluster molto leggero senza sp fasi per 
+    la sua carica? La routin di sampling prosegue all'infinito! Bisognerebbe fare un check guardando
+    quanto vale la sua funzione di partizione)
+42) Modificato HWCFOR in modo da eliminare un warning relativo ai cluster leggeri che in hw adronizzerebbero
+    in una sola particella. Commentanto il ciclo do (vedi file) sembra tutto ok.
+    (FATTO 10/01/10, sembra ok ma sarebbe meglio avere un'idea chiara di cosa succede la dentro!) 
+43) Aggiunta una flag nel main che permette di simulare gli eventi con HW std o con HW+MCSTHAR
+    (FATTO 12/01/10 e testato)
+44) Aggiunto il file eventshapes.e per fare le analisi sulla shape degli eventi e la corrispondente
+    informazione nel Makefile
+    (FATTO 12/01/10 e testato, almeno nel funzionamento generale, resta da vedere se nel dettaglio Ë ok)
+45) Aggiunta routine mcsthrhwcfor che replica quella originale ma con la parte sui cluster leggeri 
+    in modo che la simulazione con hw std sia quella "originale"
+    (FATTO 12/01/10 e testato, am come detto sopra resta da capire se si sta togliendo qualcosa di importante)
+46) Eliminato ICODE2, adesso si usa IERROR, fa lo stesso lavoro ed Ë tutto pi˘ pulito
+    (FATTO 12/01/10 testato e sembra ok)
+47) Eliminato observables.cpp e tutto quello che lo riguardava, l'analisi si fa in fortran
+    (FATTO 12/01/10 e testato)
+48) Aggiunto il file analyis.f contentente la construzione degli
+    histo, l'analisi degli eventi, conversione in gnuplot, dati 
+    sperimentali, etc...
+   (FATTO 29/01/10 e da testare bene, soprattutto la diagonalizzazione)
+49) Aggiunte tutte le configurazioni di Z pi˘ frequenti, almeno
+   fino a 14 GeV di massa
+   (FATTO 29/01/10)
+50) Aggiunta in analysis.f la richiesta per un numero che identifica i file di output
+   (FATTO E TESTATO 02/02/10)
+51) Aggiunta la richiesta per i semi random e il numero di eventi nel main di herwig
+   (FATTO E TESTATO 02/02/10)
+52) Aggiunta la possibilit‡ di cambiare massa massima e minima dei cluster con relativi
+    controlli. Inseriti questi dati in hadrsuffin e modificato clustering in modo da 
+    contenere questa informazione. Inserito anche un simile controllo per i valori di 
+    rho e gammas.
+   (FATTO E TESTATO 09/02/10)
+53) Aggiunti gli histo con i pesi quadrati per il calcolo dell'errore teorico
+    ed aggiustato l'azzeramento iniziale di SIMY, CHI2 e SIMERR. Inoltre aggiunto
+    un file contenente la somma dei pesi, necessaria alla somma degli istogrammi
+    di diversi job.
+   (FATTO IL 12/02/10, finire di testare il tutto insieme alle routine di analisi)
+54) Aggiunto al makefile il comando make clean_anfile per cancellare tutti gli output.
+   (FATTO IL 17/02/10 E TESTATO)
+55) Inserite le cariche di Charm e Beauty per i cluster nella parte in F77 del codice
+   (FATTO IL 05/05/10 E TESTATO)
+56) Inserite le cariche di Charm e Beauty nella parte restante del codice, resta da 
+    imporne la conservazione nel sampling
+   (FATTO IL 05/05/10 e TESTATO)
+57) Modificato il codice in modo da leggere direttamente tutte le info da herwig
+   (FATTO IL 05/05/10 e da testare dopo la modifica del sampling)
+58) Modificati functions,Het_to_had,hadrongr, multsampl, mult_to_kin e Z_interpolator per poter conservare le
+    nuove cariche. In fase di sostituzione le Z.
+   (FATTO IL 06/05/10 e DA TESTARE al prossimo step)
+59) Sostituite le Z ed effettuati vari check SOLO PER LA GENERAZIONE LEGGERA. Resta da fare
+    quella sui pesanti, provare l'interp. del logaritmo e la questione del sampling in 
+    caso di funzione di partizione molto piccola: adesso rigetta l'evento dopo 1000 tentativi.
+    Aggiunto inoltre il calcolo corretto dell'errore nelle molteplicit‡ delle particelle
+    e un file MultNorm che serve solo alla somma degli istogrammi di diversi run.
+    Aggiunti i dati e gli histo per l'articolo di IFAE.
+   (FATTO IL 18/05/10 e da testare per gli errori MC e per la gen dei pesanti)
+60) Inserita il sampling dei canali per cluster pesanti con il calcolo delle medie dei leggeri 
+    basato sulla massa residua. In corso di inserimento nuove analisi e le molteplicit‡ suggerite
+    da Francesco
+   (IN CORSO IL 23/06/10 e da testare)
+61) Costruita classe per istogramma e struttura per i dati sperimentali. Inserita funzione di analisi per
+    le distribuzioni sulle singole particelle. Inserite anche nuove molteplicit‡. E' tutto da testare...
+   (FATTO IL 01/06/10 e da testare)
+62) Inserite tutte le distribuzioni sulle singole particelle usando hist. Tutte testate. Le nuove molteplicit‡
+    con i B non tornano nemmeno con Herwig standard. Inserito un reclustering addizionale che lavora solo sui
+    cluster pesanti. I due valori di taglio sono ottimizzati sull'efficienza di generazione e conservazione 
+    della corretta proporzione di eventi sperimentali charmed e bottomed. Cerco di eliminari i warning
+    di hwcfor e hwchad.
+   (FATTO IL 09/07/10)
+63) Aggiunto il print di due molteplicit‡ con bottom che mi ero dimenticato
+   (FATTO IL 11/07/10)
+64) Corretto in hist.cpp un baco che impediva la somma dei pesi e dei loro quadrati
+    su tutti i punti binnati
+   (FATTO IL 12/07/10) 
+65) Corretto in analysis.f un baco che impediva la corretta normalizzazione di meanan(53)
+   (FATTO IL 12/07/10)
+66) Aggiustato analysis.f e hist.cpp in modo da non generare nan in caso di canali vuoti
+   (FATTO IL 13/07/10)
+67) Sostituito il file analysis.f con quello usato su lxplus per la tesi
+   (FATTO IL 15/01/11)
+
+---- CPC RELEASE ----
+
+1) Passaggio da g77 a gfortran (FATTO IL 09/08/11 e da testare)
+2) Eliminato analysis.f da sorgenti e da Makefile (FATTO IL 09/08/11)
+3) Eliminata la chiamata a hwudat nel main che da problemi in fase di esecuzione. A cosa serve? 
+   (FATTO IL 09/08/11 e da testare)
+4) Introdotta nuova struttura (FATTO IL 09/08/11)
+5) Ridistribuiti i sorgenti secondo la nuova struttura, ancora da distribuire le interfacce fortran
+   e raffinare l'intera strutture (FATTO IL 17/08/11)
+6) Aggiunto Constants file in Utilities (FATTO IL 17/08/11)
+7) Inserite interfacce temporanee per herwig in interfaces (FATTO IL 17/08/11 e da testare)
+8) Cancellati identpart e localhadro perchË non utilizzati (FATTO IL 17/08/11)
+9) Modified readZfile to take in input the grid absolute path (FATTO IL 18/08/11)
+10) Aggiunta la stringa del path precedente come variabile di hadrstuffin (FATTO IL 18/08/11)
+    Momentaneamente il set della strinh Ë in hadrsetup
+11) Spearate le funzioni aggiuntive di herwig in clusterLoading e particleIdConversion (Interfaces)
+    e in herwig6510ModifiedRoutines (Main/Sources) (FATTO IL 18/08/11)
+12) Momentaneamente il setup dei parametri di herwig (qdiqk e zmxisr) viene fatto in herwig6510.f
+    (FATTO 18/08/11)
+13) Aggiunto ClusterDataCommonBlock per hadronizerpp, da raffinare insieme a tutte le interfacce (FATTO IL 18/08/11)
+14) Check con ultima versione del vecchio codice passato! (FATTO 18/08/11)
+15) Aggiunta funczione eventUpdate in Interfaces, aggiorna le common di herwig come nella seconda parte del 
+    vecchio hadronization (FATTO IL 19/08/11)
+16) Eliminato tmphadronizationinterface che non serve a nulla e spostata la nuova hadronization in 
+    HadronizationSteps (FATTO IL 19/08/11)
+17) Check con ultima versione del vecchio codice passato! (FATTO 19/08/11)
+18) Aggiunto il modulo HadronizationSetup e spostate qua le funzioni di setup dei parametri (FATTO IL 20/08/11)
+19) Aggiunta ad hadrstuff la stringa con il nome assoluto del file di hadroni e modificato fs_set in modo
+    da leggere da file. Momentaneamente, come per le funzioni di partizione, il file viene specificato in 
+    hadrsetup. (FATTO IL 20/08/11)
+20) Separato il wrapper originale in Herwig6510Wrapper e Herwig6510InterfaceWrapper, resta da chiarire il ruolo
+    di hwudat.. (FATTO IL 20/08/11 e da testare per l'inizialzzazione di hwudat)
+21) Check con ultima versione del vecchio codice passato! (FATTO IL 20/08/11)
+22) Spostato makefile all'interno della directory main (FATTO iIL 04/09/11)
+23) Ripulito il codice esistente per particle, cluster e hepobj che diventano Cluste, Particle e HadronizationObject
+    (FATTO IL 04/09/11 e testato). Modificato di conseguenza tutto il resto del codice coinvolto.
+24) Aggiunto il modulo HadronizationPartitionFunction, ancora tutto da testare ed integrare. (FATTO 04/09/11 e da completare)
+25) Ripulito il codice esistente per fs_set che ora Ë HadronSet (FATTO e TESTATO 04/09/2011)
+26) Ripulito il codice esistente per kingen che ora Ë PhaseSpaceConfigurationGenerator (FATTO e TESTATO 06/09/2011). Ci 
+    sarebbe da ristrutturare la classe ed eliminare il codice duplicato.
+27) Ripulito il codice esistente per clustering che ora È ClusterHandler (FATTO E TESTATO 08/09/2011). Ci sarebbe da ripulire il metodo    di merging ed eliminare le duplicazioni di codice.
+28) Ripulito il codice esistente per la funzione hadronization che ore È runHadronization (FATTO E TESTATO 10/09/2011). Migliorare la g    estione delle flag di errore e degli eventi anomali (cancellare, rigenerare???). In herwig6510.f vedere come fare a spegnere la flag c    he conta gli errori per evitare l'INTERRUZIONE DELLA GENERAZIONE. 
+29) Ripulito il codice esistente per mult_to_kin che ora Ë getHadronizationChannelData (FATTO E TESTATO 10/09/2011).
+30) Ripulito il codice esistente per kingen_data che ora \350 HadronizationChannelData (FATTO E TESTATO 10/09/2011).
+31) Ripulito il codice esistente per clus_to_hadro che ora Ë runSingleClusterHadronization. E' meglio farlo diventare una classe! (FATT    O E TESTATO 10/09/2011)
+32) Ripulito il codice esistente per hadro che ora \350 ClusterHadronizationChannel (FATTO E TESTATO 11/09/2011).
+33) Ripulito il codice esistente per modcs2 che ora \350 computeWaveFunctionStrangeComponent (FATTO E TESTATO 11/09/2011).
+34) Ripulito il codice esistente per cluevt che ora \350 HadronizationEventRecord (FATTO E TESTATO 11/09/2011). Eliminato fs_part che non     serve pi˘.
+35) Ripulito il codice esistente per eventUpdate che ora \350 updateEventRecord (FATTO E TESTATO 11/09/2011).
+36) Ripulito il codice esistente per Z_interpolator che ora \350 PartitionFunctionHandler (FATTO E TESTATO 12/09/2011).
+    Rivedere bene se l'interpolazione funziona! 
+37) Ripulito il codice esistente per particleIdConversion che ora \350 convertParticleId (FATTO E TESTATO 14/09/2011).
+38) Ripulito il codice esistente per clusterLoading e ClusterCommonBlock (FATTO E TESTATO 14/09/2011).
+39) Ripulito il codice esistente per Herwig6510InterfaceWrapper (hadronizerpp->hwclusterdata) (FATTO E TESTATO 15/09/2011).
+40) Ripulito il codice esistente per multsampl che ora \350 HadronizationChannelGenerator (FATTO E TESTATO 18/09/2011). Da riorganizzare la sequenza di chiamate dall'esterno oppure lasciare com'Ë aggiungendo le flag di check per la sequenza delle chiamate. Eliminate le flag di conservazione e i parametri relativi a interazioni e ordine di permutazione per le stat. quantistiche.
+41) Ripulito il codice esistente per hadrongr che ora \350 HadronSamplingGroupHandler (FATTO E TESTATO 23/09/2011). Da riorganizzare nei metodi, magari usando un costruttore o un metodo di inizializzazione sensto, e nella gestione della massa, volume e temperatura di sampling. La struttura è da ripensare in modo da evitare la continua ed inutile ricostruzione dei gruppi di adroni.
+42) Cambiati particle e cluster in Particle e Cluster. Ripuliti e commentato Constants.h, Herwig6510ModifiedRoutines e Herwig6510Wrapper (FATTO E TESTATO 24/09/2011)
+43) Aggiornato hadrstuff che ora Ë separato in SetupParameters e LightUnflavouredMesonData. Codici puliti e commentati. (FATTO E TESTATO 25/09/2011)
+44) Aggiornato iosetup,hadrsetup e setpar che ora sono runSetupInterface, setHadronizationParameter, setParameters. (FATTO E TESTATO 25/09/2011).
+45) Aggiornato herwig.cpp. (FATTO E TESTATO 25/09/2011)
+46) Aggiunto HadronizationObject.cpp per implementazione costruttore mancante della classe corrispondente ed aggiunto distruttor virtual; inserite, chiamate esplicite al costruttore della classe base nei costruttori di Particle e Cluster; aggiornati i metodi di HadronizationObject/Cluster/Particle con inlining e constness; eliminati da Particle i dati membro non usati width e stability flag; eliminato da Cluster il dato membro non usato temperature. (FATTO E TESTATO 02/09/12)
+47) Aggiornato HadronSet, in particolare eliminando l'uso di Particle per salvare i dati degli adroni (adesso viene usata la struttura HadronData); introdotto l'uso delle eccezioni; introdotto l'uso di map al posto di vector per lo storage degli hadroni (temporaneamente disattivato per rendere possibile il confronto con codice di riferimento). Aggiornata anche la classe Particle in modo da usare la struttura HadronData nel costruttore. (FATTO E TESTATO 16/09/2012)
+48) Introdotta classe HadronizationException per la gestione delle eccezioni (FATTO E TESTATO 16/09/2012)
+49) Rimossa la strutture lightUnflavoredHadronData, adesso viene tutto gestito da HadronSet, HadronData e Particle (in fase di generazione). Resta da sistemare in modo definitivo l'inizializzazione della map dei mesoni light unflavored in hadron set. (FATTO E TESTATO 16/09/2012) 
+50) HadronizationObject class interface updated and m_objectIndex for
+object position storage added. (FATTO E TESTATO 26/04/2013) 
+51) Particle class interface updated according to HadronizationObject
+base class, m_parentIndex data member added and spin representation
+switched to spin multiplicity (FATTO E TESTATO 26/04/2013) 
+52) Class interface updated, m_parentIndexes data member and +
+operator for cluster merging added. (FATTO E TESTATO 26/04/2013)
+53) Hadron sampling group handler class created. (FATTO E TESTATO
+26/04/2013)
+54) HadronData structure changed into class. (FATTO E TESTATO
+26/04/2013)
+55) T parameter changed into samplingTemperature,
+charmClusterMergingMinMass and bottomClusterMergingMinMass parameter
+added in HadronizationParameters. (FATTO E TESTATO
+26/04/2013)
+56) T parameter changed into samplingTemperature,
+charmClusterMergingMinMass and bottomClusterMergingMinMass parameter
+setting added in setHadronizationParameters. (FATTO E TESTATO
+26/04/2013)
+57) HadronizationEventRecod class interface and implementation deep update. (FATTO E TESTATO
+26/04/2013)
+58) Cluster merging handling class created to substitute ClusterHandler class. (FATTO E TESTATO
+26/04/2013)
+59) ClusterHandler class deleted (ClusterMergig is now used instead). (FATTO E TESTATO
+26/04/2013)
+60) runHadronization function removed (HadronizationHandler is now used instead). (FATTO E TESTATO
+27/04/2013)
+61) runSingleClusterHadronization function removed (ClusterHadronization is now used instead). (FATTO E TESTATO
+27/04/2013)
+62) ClusterHadronizationChannel class removed, HadronizationChannel is now used instead. (FATTO E TESTATO
+27/04/2013)
+63) External cluster set hadronization handling class
+(HadronizationHandler) created. (FATTO E TESTATO
+27/04/2013)
+64) Deleted unused getHadronizationChannelData unused function. (FATTO E TESTATO
+27/04/2013)
+65) Deleted unused HadronSamplingGroupHandler class
+(HadronSamplingGroups in HadronizationHadronSet is now used instead). (FATTO E TESTATO
+27/04/2013)
+66) Removed HadronizationChannelGenerator unused class (the brand new channel generation HadronSampling class is now used instead) . (FATTO E TESTATO
+27/04/2013)
+67) Removed unused PhaseSpaceGenerator class, PhaseSpaceSampling is now used instead. (FATTO E TESTATO
+27/04/2013)
+68) Removed unused class PartitionFunctionHandler,
+PartitionFunctionHandling is now used instead. (FATTO E TESTATO
+27/04/2013) 
+69) PartitionFunctionHandling patition function handling class subtistuting PartitionFunctionHandler created. (FATTO E TESTATO
+27/04/2013)
+70) Single cluster hadronization handling ClusterHadronization class created. (FATTO E TESTATO
+27/04/2013)
+71) Single cluster hadronization hadron sampling class HadronSampling created. (FATTO E TESTATO
+27/04/2013)
+72) Single cluster hadronization phase space sampling PhaseSpaceSampling class created. (FATTO E TESTATO
+27/04/2013)
+73) Files/directories opening and exploration handling functions
+created (fileUtils). (FATTO E TESTATO
+27/04/2013)
+74) Constant set in Constants.h updated. (FATTO E TESTATO
+27/04/2013)
+75) computeWaveFunctionStrangeComponent doxy comment update and code
+refinement. (FATTO E TESTATO
+27/04/2013)
+76) Removed unused clusterLoading interface function, C++ function
+loadClusters is now used instead. (FATTO E TESTATO
+27/04/2013)
+77) New C++ interface function for cluster loading (loadClusters) created. (FATTO E TESTATO
+27/04/2013)
+78) updateEventRecord. function updated according to new hadronization event record storage (through HadronizationEventRecord class). (FATTO E TESTATO
+27/04/2013)
+79) Herwig6510 specific constants header file (Herwig6510Constants) created. (FATTO E TESTATO
+27/04/2013)
+80) Removed unused ClusterDataCommonBlock common block. (FATTO E TESTATO
+27/04/2013)
+81) Herwig6510InterfaceWrapper.h wrapper file update. (FATTO E TESTATO
+27/04/2013)
+
+FIND AND FIXED BUGS:
+1) C'Ë una chiamata a hwwarn con codice 101 in hwcfor,
+   ma non dovrebbe essere originato da MCSTHAR++, perchË
+   relativo alla clusterizzazione dopo lo shower e non c'entra
+   con gli heavy decays 
+2) Il numero di particelle dei sette gruppi, non i barioni, aumenta
+   evento per evento, c'Ë un problema sulla cancellazione delle variabili
+   di tmpgr in her_to_had. Risolto cancellando i vettori dei gruppi
+   ad ogni chiamata si sethadrgr.(FIXED)
+3) I barioni non vengono inseriti nel gruppo corrispondente ma in fs_set
+   comunque ci sono! Il file di input Ë sbagliato,
+   in heppdt gli faccio scrivere 0 nel numero barionico! Rigenerare il file
+   ricordando di sostituire le masse che ci sono in herwig! (FIXED)
+4) Non ci sono cluster antibarionici, solo barionici!!! Deve esserci un problema
+   nella routine che calcola le cariche abeliane, ma solo per il numero barionico!
+   (FIXED) 
+5) Mancava una delle possibili composizioni dei cluster in find_ch (FIXED)
+6) C'Ë un errore nel calcolo del peso della configurazione cnematica. Alla linea 135
+    di kingen.cpp c'era un boost fatto con il quadrimpulso sbagliato. (FIXED) 
+7) Subscript out of range on file line 171359, procedure herwig6510.f/hwdhadchr.
+    Attempt to access the 0-th element of variable idhw. E' un errore che deriva da come
+    assegno le madri delle particelle prodotta dall'adrostat. Provo ad
+    aggiornare completamente hepevt e hwevnt con i cluster prodotti e tutto quello che 
+    bisogna aggiornare.(FIXED).   
+8) Con il reclustering c'Ë un nan con warning in kingen e cluster singolo.
+    Per problemi di precisione numerica puÚ succedere
+     che in splitgen modp^2 sia negativo (-10^-18...) allora prendo il massimo tra 0 e 
+     modp^2. Idem in lastsplitgen. (FIXED)   
+9) j = j - 1 quando si erasa (FIXED)
+13) Baco nel men˘ (FIXED)
+14) Baco nell'aggiornamento delle flag di conservazione (FIXED)
+15) Baco in hadrongr sul vttore grmean e sui vettori delle medie di ogni particella in sethadro,
+     risolto con un grmean.clear() e con l'analogo per i vettori delle particelle all'inizio del metodo. (FIXED)
+16) Sistemato makefile che aveva un errore: Her_to_had -> Her_to_Had (FIXED)
+17) Sistemato il baco nel riportare il peso del multsampl, deve essere diviso, non moltiplicato. (FIXED)
+18) Trovato e rimosso un errore nella scelta della funzione di bessel per i contributi
+     quantistici, non Ë BesselJ1 ma sph_bessel (FIXED)
+19) Trovato e rimosso un errore nel calcolo del peso nel sampling delle molteplicit‡,
+     mancava il contributo esponenziale per le specie adroniche che non sono state 
+     campionate. (FIXED)
+20) Trovato e rimosso un bug in hadrongr che non cancellava il vettore grmean ad
+        ogni upload di un nuovo cluster, usando quindi sempre le stesse molteplicit‡ medie
+	per i gruppi di particelle. Stessa cosa per i vettori che contengono le medie di ogni singola
+	particella.(FIXED)
+21) Trovato e rimosso un baco in fs_set.cpp: la flag stab una volta modificata da 0 a 1 rimaneva sempre così!
+    Adesso viene invece riazzerata ogni volta ch si carica una nuova particella. 
+    (22/10/09)(FIXED)
+22) Trovato e rimosso un baco in Z_interpolator.cpp alla linea 225: il blocco for che serve a memorizzare
+    in inputfile[] il nome del file da aprire usava l'indice i che viene gia\340 usato sopra
+    nel	ciclo esterno. Risolto cambiando indice.(23/10/09)(FIXED)
+23) Trovato e rimosso un baco in Z_interpolator.cpp, risolto usando le variabili tmpm,tmprho,...etc, al
+    posto di m,rho,...etc,... perch√® le variabili gamma e rho sono membri dell classe. 
+    (13/11/09)(FIXED)
+24) Modificato il nome della routine nella chiamata a hwwarn in mcsthrhwd..., era troppo lungo.
+    (27/11/09)(FIXED)
+25) Modificata la definizione del file esterno da leggere, per cariche negative era sbagliato
+    (16/12/09)(FIXED)
+26) Aggiustato l'upload dei file esterni in Z_interpolator, c'era un problema quando si
+     trovava un file mancante: i vettori di gamma e/o rho potevano non
+     finire con il valore massimo disponibile. Allora cancello le info
+     in pi˘ in modo che l'ultimo punto sia sempre con il massimo di
+     gamma e rho.
+    (16/12/09)(FIXED)
+27) Aggiustato il baco, gi‡ sistemato in MicroPartition, relativo all'assegnazione
+    della stranezza alle particelle. Il segno era sbagliato, adesso dovrebbe essere ok
+    (05/01/10)(FIXED)
+28) Corretto baco nel makefile: HERW...inc -> HERW...INC, su mac no problem ma su linux
+    non funziona!
+    (13/01/10)(FIXED)   
+29) In analysis.f il nome del file adesso Ë correttamente Sph.gnp
+    (09/02/10)(FIXED)
+30) Spostata la chiamata di hwigin nella posizione corretta in modo da poter modificare
+    le common
+    (05/05/10)(FIXED)
+31) Nel decay degli heavy hadrons vingono richiamate da herwig le routine di shower, formazione
+    cluster, e adronizzazione, ripassado su tutti i cluster presenti. Quindi metto, almeno per il 
+    momento istep = 183 per tutti i cluster, anche quelli spariti per il reclustering, in modo 
+    da evitare che vengano nuovamente adronizzati.
+    (16/06/10)(FIXED)
+32) Corretto il valore di un errore nelle molteplicit‡ sperimentali.
+    (17/06/10)
+
+---- CPC RELEASE ----
+
+Archivio creato il 22/10/09, giorno dell'ultimo check effettuato sullo stato di correzione dei
+bug trovati fino ad oggi
+Ultimo aggiornamento il giorno 17/08/11
+

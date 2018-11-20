@@ -1,0 +1,99 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!-- Atomic types -->
+
+    <xs:complexType name="MesonMixingData">
+        <xs:sequence>
+            <xs:element name="mesonFamily" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>
+                        Meson family (singlet or octect).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="mixingAngle" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Meson mixing angle (deg).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="HadronDataElement">
+        <xs:sequence>
+            <xs:element name="hadronID" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Hadron ID.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="hadronFlavorComposition" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        Hadron flavor composition (2(3) digit integer for mesons(baryons)).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="mesonMixingData" type="MesonMixingData" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>
+                        Meson mixing data.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>            
+            <xs:element name="hadronSpinMultiplicity" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        Hadron spin multiplicity.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="hadronMass" type="xs:double">
+                <xs:annotation>
+                    <xs:documentation>
+                        Hadron mass (GeV).
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- List types -->
+    
+    <xs:complexType name="HadronDataList">
+		<xs:sequence>
+			<xs:element name="hadronData" type="HadronDataElement" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>
+                        Hadron data element.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="length" type="xs:unsignedInt" use="required">
+			<xs:annotation>
+				<xs:documentation>Number of hadron data elements.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+    
+    <!-- Global structure -->
+    
+    <xs:element name="HadronDataSet">
+	   	<xs:complexType>
+            <xs:sequence>
+                <xs:element name="hadronDataList" type="HadronDataList">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Hadron data set.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+	</xs:element>
+
+</xs:schema>
