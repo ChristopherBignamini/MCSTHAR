@@ -1,4 +1,4 @@
-# MCSTHAR
+# MCSTHAR++
 
 MCSTHAR++ is a C++ Monte Carlo code implementing the Statistical Hadronization Model:
 
