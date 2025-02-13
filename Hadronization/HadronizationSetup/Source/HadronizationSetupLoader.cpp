@@ -5,12 +5,12 @@
 HadronizationSetupLoader::HadronizationSetupLoader(const string& i_hadronizationSetupFileName)
                                                   :m_hadronizationSetupAvailability(false)
 {    
-    auto_ptr<MCSTHARSetup::MCSTHARSetup> hadronizationSetupFile;
+    unique_ptr<::MCSTHARSetup> hadronizationSetupFile;
     try
     {
         // Parse setup file
-        hadronizationSetupFile = MCSTHARSetup::MCSTHARSetup_(i_hadronizationSetupFileName,
-                                                             xml_schema::flags::dont_validate);
+        hadronizationSetupFile = MCSTHARSetup_(i_hadronizationSetupFileName,
+                                               xml_schema::flags::dont_validate);
     }
     catch(const xml_schema::exception& exception)
     {

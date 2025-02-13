@@ -18,16 +18,16 @@
 #include "../../../Utilities/Include/HadronizationException.h"
 
 // HepMC event writing for Rivet analysis
-#include "../../../Analysis/HepMCEventStorage/Include/buildHepMCEventRecord.h"
+//#include "../../../Analysis/HepMCEventStorage/Include/buildHepMCEventRecord.h"
 
 using namespace std;
 
 int main(){
 	
     // TODO: switch to rivet+hepmc api direct usage!
-    unsigned int hepMCEVentCounter(1);
-    HepMCEventRecord::initHepMCStorage();
-    HepMCEventRecord::HepMCStorageData hepMCStorageData("hepmc.fifo");
+    // unsigned int hepMCEVentCounter(1);
+    // HepMCEventRecord::initHepMCStorage();
+    // HepMCEventRecord::HepMCStorageData hepMCStorageData("hepmc.fifo");
     
     // Hadronization process error status
     unsigned int hadronizationErrorStatus;
@@ -171,8 +171,8 @@ int main(){
             // Check event status (Herwig error) and run analysis
             if((hwevnt.IERROR==0) && hadronizationErrorStatus==0)
             {
-                HepMCEventRecord::buildHepMCEventRecord(hepMCStorageData,hepMCEVentCounter);
-                ++hepMCEVentCounter;
+//                HepMCEventRecord::buildHepMCEventRecord(hepMCStorageData,hepMCEVentCounter);
+//                ++hepMCEVentCounter;
             }
                 
 //            else
@@ -188,25 +188,25 @@ int main(){
 //                i = i - 1;
 //            }
             
-//            // TODO: debug
-//            ofstream eventFile;
-//            eventFile.open("eventFile.txt",std::fstream::app);
-//            eventFile<<setprecision(9);
-//            eventFile<<i<<" "<<hwevnt.EVWGT<<endl;
-//            for(int objectIndex=0;objectIndex<MCSTHAR::hepevt.NHEP;++objectIndex)
-//            {
-//                if((abs(MCSTHAR::hepevt.IDHEP[objectIndex])>=22) &&
-//                   (MCSTHAR::hepevt.IDHEP[objectIndex]!=94))
-//                {
-//                    eventFile<<MCSTHAR::hepevt.IDHEP[objectIndex]<<
-//                    " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][0]<<
-//                    " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][1]<<
-//                    " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][2]<<
-//                    " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][3]<<
-//                    " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][4]<<endl;
-//                }
-//            }
-//            eventFile.close();
+           // TODO: debug
+           ofstream eventFile;
+           eventFile.open("eventFile.txt",std::fstream::app);
+           eventFile<<setprecision(9);
+           eventFile<<i<<" "<<hwevnt.EVWGT<<endl;
+           for(int objectIndex=0;objectIndex<MCSTHAR::hepevt.NHEP;++objectIndex)
+           {
+               if((abs(MCSTHAR::hepevt.IDHEP[objectIndex])>=22) &&
+                  (MCSTHAR::hepevt.IDHEP[objectIndex]!=94))
+               {
+                   eventFile<<MCSTHAR::hepevt.IDHEP[objectIndex]<<
+                   " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][0]<<
+                   " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][1]<<
+                   " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][2]<<
+                   " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][3]<<
+                   " "<<(MCSTHAR::hepevt.PHEP)[objectIndex][4]<<endl;
+               }
+           }
+           eventFile.close();
         }
         
         // Close Herwig event generation

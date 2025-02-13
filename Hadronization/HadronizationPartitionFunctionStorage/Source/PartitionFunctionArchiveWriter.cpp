@@ -33,7 +33,7 @@ PartitionFunctionArchiveWriter::PartitionFunctionArchiveWriter(const string& i_p
                                                           s_partitionFunctionArchiveFileName);
         if(archiveFileIt!=archiveFolderContent.end())
         {
-            auto_ptr<PartitionFunctionArchiveFile> loadedPartitionFunctionArchive;
+            unique_ptr<PartitionFunctionArchiveFile> loadedPartitionFunctionArchive;
             try
             {
                 // Parse existing PartitionFunctionArchive file

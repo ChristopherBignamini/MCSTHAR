@@ -1,16 +1,16 @@
 ############### General compiler settings ###############
 
-CPP = g++
+CPP = /opt/homebrew/opt/llvm/bin/clang++
 ifeq ($DEBUG,0)
 #ifnotdebug
-    CPPFLAGS = -O3 -Wall -Wreorder
+    CPPFLAGS = -O3 -Wall -Wreorder -std=c++17
     FFLAGS = -O3 -Wall
 else
-    CPPFLAGS = -g -Wall -Wreorder
+    CPPFLAGS = -g -Wall -Wreorder -std=c++17
     FFLAGS = -g -Wall
 endif
 #F = gfortran
-F = /usr/local/bin/gfortran
+F = /opt/homebrew/bin/gfortran
 #else
 #endif
  
@@ -19,26 +19,25 @@ F = /usr/local/bin/gfortran
 ############### Compiler external include and link flags#
 # TODO: switch to autotools..
 #ROOT_INCLUDE = $(shell root-config --cflags)
-ROOT_INCLUDE = -D_REENTRANT -pthread -m64 -I/Users/Christopher/Development/Libraries/root_5_28//include/root
+ROOT_INCLUDE = -D_REENTRANT -pthread -m64 -I/opt/homebrew/include/root
 #ROOT_LINK = $(shell root-config --libs)
-ROOT_LINK = -L/Users/Christopher/Development/Libraries/root_5_28//lib/root -lCore -lCint -lRIO -lNet -lHist \
+ROOT_LINK = -L/opt/homebrew/lib/root -lCore -lRIO -lNet -lHist \
 	-lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl
-XSD_INCLUDE = -I/Users/Christopher/Development/Libraries/xsd-3.3.0-i686-macosx/libxsd
-XSD_LINK = -L/Users/Christopher/Development/Libraries/xerces-c_3_1_1/lib -lxerces-c
-XERCES_INCLUDE = -I/Users/Christopher/Development/Libraries/xerces-c_3_1_1/include
-HERWIG_INCLUDE = -I/Users/Christopher/Development/WorkingDirs/MCSTHAR++CPC/MCSTHAR++/Main/Herwig6510/Include
-HEPMC_INCLUDE = -I/Users/Christopher/Development/Tools/Rivet_1_8_3/include
-HEPMC_LINK = -L/Users/Christopher/Development/Tools/Rivet_1_8_3/lib \
-	-lHepMC -lHepMCfio
-GSL_INCLUDE = -I/Users/Christopher/Development/Libraries/gsl_1_14/include 
-GSL_LIB = -L/Users/Christopher/Development/Libraries/gsl_1_14/lib -lgsl
-#EFENCE_LINK = -L/Users/Christopher/Development/Tools/efence_mac-2.1.13 -lefence
+XSD_INCLUDE = -I/opt/homebrew/include
+XSD_LINK = -L/opt/homebrew/lib/ -lxerces-c
+XERCES_INCLUDE = -I/opt/homebrew/include/xercesc/
+HERWIG_INCLUDE = -I/Users/bignamic/Development/HEP/MCSTHAR/Main/Herwig6510/Include
+HEPMC_INCLUDE = -I/opt/homebrew/Cellar/hepmc2/2.06.11/include/
+HEPMC_LINK = -L/opt/homebrew/Cellar/hepmc2/2.06.11/lib/ -lHepMC -lHepMCfio
+GSL_INCLUDE = -I/opt/homebrew/include/
+GSL_LIB = -L/opt/homebrew/lib/ -lgsl
 #########################################################
 
 ############### Compiler fortran libraries link flag ####
 
-FLINKFLAG = -L/usr/local/lib/gcc/x86_64-apple-darwin10.4.0/4.6.0 \
+#FLINKFLAG = -L/usr/local/lib/gcc/x86_64-apple-darwin10.4.0/4.6.0 \
         -lgfortran -lgcc_ext.10.5 -lgcc -no_compact_unwind -lSystem
+FLINKFLAG = -L/opt/homebrew/lib/gcc/current/ -lgfortran 
 
 #########################################################
 
@@ -73,6 +72,8 @@ MCSTHAROBJECTS = \
 	HadronizationHandler.o \
 	HadronSet.o \
 	HadronData.o \
+	HadronDataSet.o \
+	HadronDataSetLoader.o \
 	HadronSamplingGroups.o \
 	computeWaveFunctionStrangeComponent.o \
 	PhaseSpaceSampling.o \
@@ -103,8 +104,8 @@ INTERFACEOBJECTS = \
 	convertParticleId.o \
 	updateEventRecord.o
 
-ANALYSISOBJECTS = \
-	buildHepMCEventRecord.o
+# ANALYSISOBJECTS = \
+# 	buildHepMCEventRecord.o
 
 HERWIGOBJECTS = herwig6510.o
 
@@ -121,13 +122,14 @@ default: $(EXE)
 herwig.exe: $(OBJECTS)
 	$(CPP) -o $(EXE) $(OBJECTS) $(FLINKFLAG) $(ROOT_LINK) $(GSL_LIB) $(XSD_LINK) $(HEPMC_LINK) $(EFENCE_LINK) 
 
+#buildHepMCEventRecord.h 
+#$(HEPMC_INCLUDE)
 herwig.o: herwig.cpp \
 	hwcforMCSTHAR.h loadClusters.h \
 	updateEventRecord.h Herwig6510Wrapper.h \
 	HadronizationSetupLoader.h \
-	HadronizationHandler.h HadronizationException.h \
-	buildHepMCEventRecord.h
-	$(CPP) -c $(CPPFLAGS) $(XSD_INCLUDE) $(XERCES_INCLUDE) $(ROOT_INCLUDE) $(HEPMC_INCLUDE) $<
+	HadronizationHandler.h HadronizationException.h
+	$(CPP) -c $(CPPFLAGS) $(XSD_INCLUDE) $(XERCES_INCLUDE) $(ROOT_INCLUDE) $<
 
 ############### Compile MCSTHAR++ code ##################
 
@@ -157,6 +159,10 @@ HadronData.o: HadronData.cpp HadronData.h HadronizationException.h
 HadronDataSet.o: HadronDataSet.cpp HadronDataSet.h
 	$(CPP) -c $(CPPFLAGS) $(XSD_INCLUDE) $(XERCES_INCLUDE) $<
 
+HadronDataSetLoader.o: HadronDataSetLoader.cpp HadronDataSetLoader.h HadronDataSet.h \
+	HadronData.h HadronizationException.h 
+	$(CPP) -c $(CPPFLAGS) $(XSD_INCLUDE) $(XERCES_INCLUDE) $<
+
 HadronSamplingGroups.o: HadronSamplingGroups.cpp HadronSamplingGroups.h HadronSet.h
 	$(CPP) -c $(CPPFLAGS) $<
 
@@ -170,7 +176,7 @@ PhaseSpaceSampling.o: PhaseSpaceSampling.cpp \
 
 HadronSampling.o: HadronSampling.cpp \
 	HadronSampling.h ChargeConfiguration.h HadronData.h Constants.h HadronizationException.h
-	$(CPP) -c $(CPPFLAGS) $(ROOT_INCLUDE) $<
+	$(CPP) -c $(CPPFLAGS) $(ROOT_INCLUDE) $(GSL_INCLUDE) $<
 
 ClusterHadronization.o: ClusterHadronization.cpp ClusterHadronization.h HadronSamplingGroups.h\
 	PhaseSpaceSampling.h Cluster.h HadronData.h HadronizationChannel.h HadronizationException.h
@@ -255,8 +261,8 @@ fileUtils.o: fileUtils.cpp fileUtils.h HadronizationException.h
 
 ############### Compile Analysis code ############
 
-buildHepMCEventRecord.o: buildHepMCEventRecord.cpp buildHepMCEventRecord.h
-	$(CPP) -c $(CPPFLAGS) $(HEPMC_INCLUDE) $< 
+# buildHepMCEventRecord.o: buildHepMCEventRecord.cpp buildHepMCEventRecord.h
+# 	$(CPP) -c $(CPPFLAGS) $(HEPMC_INCLUDE) $< 
 
 #########################################################
 
@@ -276,7 +282,7 @@ hwcforMCSTHAR.o: \
 loadClusters.o: loadClusters.cpp loadClusters.h \
 	Herwig6510Constants.h Herwig6510Wrapper.h \
 	HadronizationException.h ChargeData.h
-	$(CPP) -c $(CPPFLAGS) $(ROOT_INCLUDE) $(EFENCE_LINK) $<
+	$(CPP) -c $(CPPFLAGS) $(ROOT_INCLUDE) $(HEPMC_INCLUDE) $(EFENCE_LINK) $<
 
 convertParticleId.o: \
 	convertParticleId.f herwig6510.inc HERWIG65.INC

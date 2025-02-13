@@ -1,5 +1,7 @@
+#include <memory> 
+
 #include "../Include/HadronDataSetLoader.h"
-#include "../Include/HadronDataSet.h"
+#include "../Include/HadronDataSet.hxx"
 #include "../../../Utilities/Include/HadronizationException.h"
 #include "../../../Utilities/Include/computeWaveFunctionStrangeComponent.h"
 
@@ -8,7 +10,7 @@ HadronDataSetLoader::HadronDataSetLoader(const string& i_hadronDataSetFileName,
                                         :m_hadronDataSetAvailability(false)
 {
     // Parse hadron data file
-    auto_ptr< ::HadronDataSet> hadronDataSetFile;
+    std::unique_ptr< ::HadronDataSet> hadronDataSetFile;
     try
     {
         // Parse data set file

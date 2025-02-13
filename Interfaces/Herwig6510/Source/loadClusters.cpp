@@ -6,6 +6,8 @@
 #include "../../../Utilities/Include/Constants.h"
 #include "TLorentzVector.h"
 
+//#include "HepMC/HEPEVT_Wrapper.h"
+
 vector<Cluster> loadClusters(const double i_energyDensity)
 {
     // Store initial space for a cluster only event, to be resized later on (to avoid push back)

@@ -169,9 +169,9 @@ class PartitionFunctionHandling
     
         void loadPartitionFunctionArchiveStructureData(void);
 
-        void setPartitionFunctionDataSetFileList(const auto_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile);
+        void setPartitionFunctionDataSetFileList(const unique_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile);
 
-        void setMicrocanonicalParameterGridStructure(const auto_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile);
+        void setMicrocanonicalParameterGridStructure(const unique_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile);
 
         void computeMicrocanonicalParameterGridInterpolationData(void);
 

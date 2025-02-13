@@ -66,7 +66,7 @@ void PartitionFunctionHandling::loadPartitionFunctionArchiveStructureData(void)
         const string partitionFunctionArchiveFullFileName(m_partitionFunctionDataFolder +
                                                           "/" +
                                                           s_partitionFunctionArchiveFileName);
-        auto_ptr<PartitionFunctionArchiveFile> partitionFunctionArchiveFile;
+        unique_ptr<PartitionFunctionArchiveFile> partitionFunctionArchiveFile;
         try
         {
             // Parse existing PartitionFunctionArchive file
@@ -106,7 +106,7 @@ void PartitionFunctionHandling::loadPartitionFunctionArchiveStructureData(void)
     return;
 }
 
-void PartitionFunctionHandling::setPartitionFunctionDataSetFileList(const auto_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile)
+void PartitionFunctionHandling::setPartitionFunctionDataSetFileList(const unique_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile)
 {
     // Check number of single charge configuration partition function data set
     if(i_partitionFunctionArchiveFile->singleChargeConfigurationArchiveList().length()==0)
@@ -141,7 +141,7 @@ void PartitionFunctionHandling::setPartitionFunctionDataSetFileList(const auto_p
 
 // TODO: check for code refactoring with partition function writing class
 // TODO: required, no check is actually performed on microcanonical grid structure!
-void PartitionFunctionHandling::setMicrocanonicalParameterGridStructure(const auto_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile)
+void PartitionFunctionHandling::setMicrocanonicalParameterGridStructure(const unique_ptr<PartitionFunctionArchiveFile>& i_partitionFunctionArchiveFile)
 {
     // TODO: warning, the same grid is assumed for all charge configurations
     // Set microcanonical parameter grid dimensions
@@ -446,7 +446,7 @@ void PartitionFunctionHandling::updatePartitionFunctionSubSet(const MCSTHAR::Uti
     const string filePath(i_dataFolder + "/");
     const string partitionFunctionDataSummaryFullFileName(filePath +
                                                           s_partitionFunctionDataSummaryFileName);
-    auto_ptr<PartitionFunctionDataSummaryFile> partitionFunctionDataSummaryFile;
+    unique_ptr<PartitionFunctionDataSummaryFile> partitionFunctionDataSummaryFile;
     try
     {
         partitionFunctionDataSummaryFile = PartitionFunctionDataSummaryFile_(partitionFunctionDataSummaryFullFileName,
@@ -521,7 +521,7 @@ void PartitionFunctionHandling::loadPartitionFunctionDataFile(const string& i_pa
     
     // Load partition function data 
     // TODO: add support for win?
-    auto_ptr<PartitionFunctionDataFile> partitionFunctionDataFile;
+    unique_ptr<PartitionFunctionDataFile> partitionFunctionDataFile;
     try
     {
         partitionFunctionDataFile = PartitionFunctionDataFile_(i_partitionFunctionDataFullFileName,

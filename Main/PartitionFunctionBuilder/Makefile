@@ -1,6 +1,6 @@
 ############### General compiler settings ###############
 CPP = mpic++
-CPPFLAGS = -O3 -Wall -Wreorder
+CPPFLAGS = -O3 -Wall -Wreorder -std=c++17
 #CPPFLAGS = -g -Wall -Wreorder
 
 #########################################################
@@ -8,16 +8,16 @@ CPPFLAGS = -O3 -Wall -Wreorder
 ############### Compiler external include and link flags#
 # TODO: switch to autotools..
 #ROOT_INCLUDE = $(shell root-config --cflags)
-ROOT_INCLUDE = -D_REENTRANT -pthread -I/Users/Christopher/Development/Libraries/root_5_28//include/root
+ROOT_INCLUDE = -D_REENTRANT -pthread -I/opt/homebrew/include/root
 #ROOT_LINK = $(shell root-config --libs)
-ROOT_LINK = -L/Users/Christopher/Development/Libraries/root_5_28//lib/root -lCore -lCint -lRIO -lNet -lHist \
+ROOT_LINK = -L/opt/homebrew/lib/root -lCore -lRIO -lNet -lHist \
 	-lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl
-XSD_INCLUDE = -I/Users/Christopher/Development/Libraries/xsd-3.3.0-i686-macosx/libxsd
-XSD_LINK = -L/Users/Christopher/Development/Libraries/xerces-c_3_1_1/lib -lxerces-c
-XERCES_INCLUDE = -I/Users/Christopher/Development/Libraries/xerces-c_3_1_1/include
-OMP_LINK = -lgomp
-GSL_INCLUDE = -I/Users/Christopher/Development/Libraries/gsl_1_14/include 
-GSL_LIB = -L/Users/Christopher/Development/Libraries/gsl_1_14/lib -lgsl
+XSD_INCLUDE = -I/opt/homebrew/include
+XSD_LINK = -L/opt/homebrew/lib/ -lxerces-c
+XERCES_INCLUDE = -I/opt/homebrew/include/xercesc/
+OMP_LINK = -L/opt/homebrew/opt/libomp/lib -lomp
+GSL_INCLUDE = -I/opt/homebrew/include/
+GSL_LIB = -L/opt/homebrew/lib/ -lgsl
 #RANDOMGEN = -D_USEROOTRANDOM 
 RANDOMGEN = 
 LOGLEV = -D_FULLLOG

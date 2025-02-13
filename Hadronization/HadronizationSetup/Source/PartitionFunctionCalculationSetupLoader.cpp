@@ -8,7 +8,7 @@
 PartitionFunctionCalculationSetupLoader::PartitionFunctionCalculationSetupLoader(const string& i_partitionFunctionCalculationSetupFileName)
                                                                                 :m_partitionFunctionCalculationSetupAvailability(false)
 {
-    auto_ptr< ::MCSTHARPartitionFunctionCalculationSetup> partitionFunctionCalculationSetupFile;
+    unique_ptr< ::MCSTHARPartitionFunctionCalculationSetup> partitionFunctionCalculationSetupFile;
     try
     {
         // Parse setup file
